@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAU - Prakash Agarbatti Udyog</title>
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --secondary: #f39c12;
+            --light: #f5f5f5;
+            --dark: #333;
+            --accent: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/400');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 6rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Featured Products */
+        .section-title {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #7d3c98;
+        }
+
+        /* About Section */
+        .about {
+            background-color: white;
+            padding: 4rem 0;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-img {
+            height: 300px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .about-text h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            margin-bottom: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: #f9f9f9;
+        }
+
+        .testimonial-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .testimonial {
+            min-width: 300px;
+            max-width: 400px;
+            scroll-snap-align: start;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial p {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial .author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            width: 40px;
+            height: 40px;
+            background-color: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        .cart-items {
+            margin: 2rem 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            padding: 0 1rem;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #f0f0f0;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .quantity {
+            margin: 0 10px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #7d3c98;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin: 0 0.7rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cart-item-info {
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">PAU<span>.</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li class="cart-icon" id="cartIcon">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Premium Incense Sticks</h1>
+            <p>Elevate your senses with the finest aromatic incense sticks from Prakash Agarbatti Udyog.</p>
+            <a href="#products" class="btn">Explore Products</a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="products" class="container">
+        <h2 class="section-title">Our Premium Collection</h2>
+        <div class="products" id="productContainer">
+            <!-- Products will be inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About PAU</h2>
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="/api/placeholder/400/300" alt="PAU workshop">
+                </div>
+                <div class="about-text">
+                    <h2>Prakash Agarbatti Udyog</h2>
+                    <p>Established with a vision to bring premium quality incense sticks to every home, Prakash Agarbatti Udyog (PAU) has been a pioneer in the industry for over two decades.</p>
+                    <p>Our products are crafted with the finest natural ingredients, sourced from sustainable suppliers. We take pride in our traditional manufacturing techniques that have been passed down through generations, combined with modern quality control measures.</p>
+                    <p>At PAU, we believe that fragrances have the power to transform moods, spaces, and experiences. Our diverse range of aromas caters to different preferences and occasions, from meditation and prayer to home freshening and aromatherapy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonial-container">
+                <div class="testimonial">
+                    <p>"The fragrance of PAU's sandalwood incense sticks is authentic and long-lasting. It creates the perfect ambiance for my morning meditation."</p>
+                    <div class="author">- Rajesh Sharma</div>
+                </div>
+                <div class="testimonial">
+                    <p>"I've been using PAU products for over 5 years now. Their quality is consistent, and the variety of fragrances is impressive."</p>
+                    <div class="author">- Meena Patel</div>
+                </div>
+                <div class="testimonial">
+                    <p>"As a retailer, I appreciate PAU's professional approach and the popularity of their products among my customers. Their jasmine incense sticks are particularly a hit!"</p>
+                    <div class="author">- Sanjay Gupta</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="#">Premium Collection</a></li>
+                        <li><a href="#">Traditional Series</a></li>
+                        <li><a href="#">Aromatherapy Range</a></li>
+                        <li><a href="#">Gift Packs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Email: info@pau-incense.com</li>
+                        <li>Phone: +91 9507002400</li>
+                        <li>Address: Station Road, Patory, Bihar, India</li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#">📘</a>
+                        <a href="#">🐦</a>
+                        <a href="#">📸</a>
+                        <a href="#">💼</a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Prakash Agarbatti Udyog. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Your Cart</h2>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be inserted here by JavaScript -->
+                <p id="emptyCartMessage">Your cart is empty.</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">₹0.00</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        // Product data
+        const products = [
+            {
+                id: 1,
+                name: "Sandalwood Premium Incense",
+                price: 199,
+                description: "Pure sandalwood fragrance for meditation and relaxation.",
+                image: "image.png"
+                // image: "/api/placeholder/250/200"
+            },
+            {
+                id: 2,
+                name: "Lavender Aromatherapy Sticks",
+                price: 249,
+                description: "Calming lavender aroma for stress relief and better sleep.",
+                // image: "/api/placeholder/250/200"
+                image: "image.png"
+            },
+            {
+                id: 3,
+                name: "Rose Garden Collection",
+                price: 179,
+                description: "Floral rose fragrance that brings freshness to your space.",
+                // image: "/api/placeholder/250/200"
+                image: "image.png"
+            },
+            {
+                id: 4,
+                name: "Mogra Special Incense",
+                price: 229,
+                description: "Traditional jasmine aroma for puja and celebrations.",
+                // image: "/api/placeholder/250/200"
+                image: "image.png"
+            },
+            {
+                id: 5,
+                name: "Lemongrass Freshness",
+                price: 199,
+                description: "Citrusy lemongrass scent to energize your environment.",
+                // image: "/api/placeholder/250/200"
+                image: "image.png"
+            },
+            {
+                id: 6,
+                name: "Meditation Blend",
+                price: 299,
+                description: "Special blend of herbs for deep meditation sessions.",
+                // image: "/api/placeholder/250/200"
+                image: "image.png"
+            }
+        ];
+
+        // Cart functionality
+        let cart = [];
+        
+        // DOM elements
+        const productContainer = document.getElementById('productContainer');
+        const cartIcon = document.getElementById('cartIcon');
+        const cartModal = document.getElementById('cartModal');
+        const closeModal = document.getElementById('closeModal');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartCount = document.getElementById('cartCount');
+        const emptyCartMessage = document.getElementById('emptyCartMessage');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        // Display products
+        function displayProducts() {
+            productContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('product');
+                
+                productElement.innerHTML = `
+                    <div class="product-img">
+                        <img src="${product.image}" alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                `;
+                
+                productContainer.appendChild(productElement);
+            });
+            
+            // Add event listeners for add to cart buttons
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        }
+
+        // Add to cart
+        function addToCart(event) {
+            const productId = parseInt(event.target.getAttribute('data-id'));
+            const product = products.find(product => product.id === productId);
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification(`Added ${product.name} to cart!`);
+        }
+
+        // Update cart
+        function updateCart() {
+            // Update cart count
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update cart items
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartItems.innerHTML = '<p id="emptyCartMessage">Your cart is empty.</p>';
+            } else {
+                emptyCartMessage.style.display = 'none';
+                
+                let cartHTML = '';
+                cart.forEach(item => {
+                    cartHTML += `
+                        <div class="cart-item">
+                            <div class="cart-item-img">
+                                <img src="${item.image}" alt="${item.name}" width="60" height="60">
+                            </div>
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <p>₹${item.price.toFixed(2)}</p>
+                            </div>
+                            <div class="cart-item-quantity">
+                                <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                            </div>
+                            <button class="remove-btn" data-id="${item.id}">🗑️</button>
+                        </div>
+                    `;
+                });
+                
+                cartItems.innerHTML = cartHTML;
+                
+                // Add event listeners for quantity buttons and remove buttons
+                const decreaseButtons = document.querySelectorAll('.decrease');
+                const increaseButtons = document.querySelectorAll('.increase');
+                const removeButtons = document.querySelectorAll('.remove-btn');
+                
+                decreaseButtons.forEach(button => {
+                    button.addEventListener('click', decreaseQuantity);
+                });
+                
+                increaseButtons.forEach(button => {
+                    button.addEventListener('click', increaseQuantity);
+                });
+                
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', removeItem);
+                });
+            }
+            
+            // Update cart total
+            const total = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartTotal.textContent = `₹${total.toFixed(2)}`;
+            
+            // Store cart in local storage
+            localStorage.setItem('pau-cart', JSON.stringify(cart));
+        }
+
+        // Decrease quantity
+        function decreaseQuantity(event) {
+            const productId = parseInt(event.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+            } else {
+                removeItem(event);
+                return;
+            }
+            
+            updateCart();
+        }
+
+        // Increase quantity
+        function increaseQuantity(event) {
+            const productId = parseInt(event.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            
+            item.quantity += 1;
+            updateCart();
+        }
+
+        // Remove item
+        function removeItem(event) {
+            const productId = parseInt(event.target.getAttribute('data-id'));
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = 'var(--primary)';
+            notification.style.color = 'white';
+            notification.style.padding = '1rem';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.2)';
+            notification.style.zIndex = '1000';
+            notification.style.transition = 'opacity 0.5s';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 2000);
+        }
+
+        // Event listeners
+        cartIcon.addEventListener('click', () => {
+            cartModal.style.display = 'block';
+        });
+
+        closeModal.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty. Please add items before checkout.');
+                return;
+            }
+            
+            alert('Thank you for your order! This is where the checkout process would continue.');
+            cart = [];
+            updateCart();
+            cartModal.style.display = 'none';
+        });
+
+        // Load cart from local storage
+        window.addEventListener('load', () => {
+            const savedCart = localStorage.getItem('pau-cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCart();
+            }
+            
+            displayProducts();
+        });
+    </script>
+</body>
+</html>
