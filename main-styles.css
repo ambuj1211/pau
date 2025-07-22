@@ -8,12 +8,12 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.4;
     color: #212121;
-    background-color: #f1f3f6;
+    background-color: #fdfaf6;
 }
 
 /* Header - Mobile First */
 .header {
-    background: #2874f0;
+    background: #6a1b1a;
     color: white;
     padding: 12px 16px;
     position: sticky;
@@ -67,7 +67,7 @@ body {
     position: absolute;
     top: -2px;
     right: -2px;
-    background: #ff6161;
+    background: #c62828;
     color: white;
     border-radius: 50%;
     width: 18px;
@@ -94,7 +94,7 @@ body {
 .search-box {
     display: flex;
     align-items: center;
-    background: #f1f3f6;
+    background: #fdfaf6;
     border-radius: 8px;
     padding: 12px 16px;
 }
@@ -114,7 +114,7 @@ body {
 
 /* Hero Banner */
 .hero {
-    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    background: linear-gradient(135deg, #de6f47, #b48551);
     color: white;
     padding: 24px 16px;
     text-align: center;
@@ -208,7 +208,7 @@ body {
 
 .filter-btn {
     flex-shrink: 0;
-    background: #f1f3f6;
+    background: #fdfaf6;
     border: 1px solid #e0e0e0;
     color: #212121;
     padding: 8px 16px;
@@ -220,9 +220,9 @@ body {
 }
 
 .filter-btn.active, .filter-btn:active {
-    background: #2874f0;
+    background: #6a1b1a;
     color: white;
-    border-color: #2874f0;
+    border-color: #6a1b1a;
 }
 
 /* Products Grid */
@@ -254,7 +254,7 @@ body {
 }
 
 .sort-btn:hover {
-    background: #f1f3f6;
+    background: #fdfaf6;
 }
 
 .product-grid {
@@ -330,7 +330,7 @@ body {
 }
 
 .product-name:hover {
-    color: #2874f0;
+    color: #6a1b1a;
 }
 
 .product-description {
@@ -354,7 +354,7 @@ body {
 .product-price {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #ff6161;
+    color: #c62828;
 }
 
 .product-original-price {
@@ -377,7 +377,7 @@ body {
 }
 
 .quantity-btn {
-    background: #2874f0;
+    background: #6a1b1a;
     color: white;
     border: none;
     width: 24px;
@@ -392,11 +392,11 @@ body {
 }
 
 .quantity-btn:active {
-    background: #1e5bc6;
+    background: #4e1010;
 }
 
 .quantity-display {
-    background: #f1f3f6;
+    background: #fdfaf6;
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 0.8rem;
@@ -406,7 +406,7 @@ body {
 }
 
 .add-to-cart {
-    background: #ff9f00;
+    background: #b8860b;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -423,7 +423,7 @@ body {
 }
 
 .view-details {
-    background: #2874f0;
+    background: #6a1b1a;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -436,7 +436,7 @@ body {
 }
 
 .view-details:active {
-    background: #1e5bc6;
+    background: #4e1010;
 }
 
 /* Cart Sidebar - Full Screen on Mobile */
@@ -458,7 +458,7 @@ body {
 }
 
 .cart-header {
-    background: #2874f0;
+    background: #6a1b1a;
     color: white;
     padding: 16px;
     display: flex;
@@ -491,7 +491,7 @@ body {
     display: flex;
     gap: 12px;
     padding: 16px 0;
-    border-bottom: 1px solid #f1f3f6;
+    border-bottom: 1px solid #fdfaf6;
 }
 
 .cart-item:last-child {
@@ -524,7 +524,7 @@ body {
 }
 
 .cart-item-price {
-    color: #ff6161;
+    color: #c62828;
     font-weight: 500;
     font-size: 0.9rem;
     margin-bottom: 8px;
@@ -543,7 +543,7 @@ body {
 }
 
 .cart-quantity-btn {
-    background: #f1f3f6;
+    background: #fdfaf6;
     border: 1px solid #e0e0e0;
     width: 32px;
     height: 32px;
@@ -570,7 +570,7 @@ body {
 .remove-btn {
     background: none;
     border: none;
-    color: #ff6161;
+    color: #c62828;
     font-size: 0.8rem;
     cursor: pointer;
     padding: 4px;
@@ -690,7 +690,7 @@ body {
 }
 
 .sort-option:hover, .sort-option.active {
-    background: #f1f3f6;
+    background: #fdfaf6;
 }
 
 /* Footer */
@@ -721,7 +721,7 @@ body {
 .contact-icon {
     width: 40px;
     height: 40px;
-    background: #f1f3f6;
+    background: #fdfaf6;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -744,7 +744,7 @@ body {
     text-align: center;
     margin-top: 24px;
     padding-top: 16px;
-    border-top: 1px solid #f1f3f6;
+    border-top: 1px solid #fdfaf6;
     font-size: 0.8rem;
     color: #878787;
 }
@@ -905,7 +905,7 @@ body {
     height: 20px;
     margin: -10px 0 0 -10px;
     border: 2px solid #f3f3f3;
-    border-top: 2px solid #2874f0;
+    border-top: 2px solid #6a1b1a;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
