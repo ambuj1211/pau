@@ -271,22 +271,98 @@ const products = [
     }
 ];
 
-
 // Current product and image state
 let currentProduct = null;
 let currentImageIndex = 0;
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// FIXED: Initialize cart with proper error handling and immediate sync
+let cart = [];
+
+// Initialize cart from localStorage with better error handling
+function initializeCart() {
+    try {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart && savedCart !== 'null' && savedCart !== 'undefined') {
+            cart = JSON.parse(savedCart);
+            // Ensure cart is an array
+            if (!Array.isArray(cart)) {
+                cart = [];
+            }
+        } else {
+            cart = [];
+        }
+    } catch (error) {
+        console.error('Error loading cart from localStorage:', error);
+        cart = [];
+        localStorage.removeItem('cart'); // Clear corrupted data
+    }
+    
+    // Immediate cart display update
+    updateCartDisplay();
+}
+
+// FIXED: Save cart with better error handling
+function saveCart() {
+    try {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    } catch (error) {
+        console.error('Error saving cart to localStorage:', error);
+        showToast('Error saving cart. Please try again.');
+    }
+}
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cart FIRST
+    initializeCart();
+    
     // Get product ID from URL parameters or default to first product
     const urlParams = new URLSearchParams(window.location.search);
     const productId = parseInt(urlParams.get('id')) || 1;
     
     loadProduct(productId);
-    updateCartDisplay();
     loadRelatedProducts(productId);
+    
+    // Setup event listeners for cart sync
+    setupCartSyncListeners();
 });
+
+// FIXED: Add cart synchronization listeners
+function setupCartSyncListeners() {
+    // Listen for localStorage changes from other pages
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'cart') {
+            try {
+                const newCart = e.newValue ? JSON.parse(e.newValue) : [];
+                if (Array.isArray(newCart)) {
+                    cart = newCart;
+                    updateCartDisplay();
+                }
+            } catch (error) {
+                console.error('Error syncing cart from storage event:', error);
+            }
+        }
+    });
+    
+    // Periodic cart sync (fallback for same-origin issues)
+    setInterval(syncCartFromStorage, 1000);
+}
+
+// FIXED: Periodic cart synchronization
+function syncCartFromStorage() {
+    try {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart && savedCart !== 'null') {
+            const parsedCart = JSON.parse(savedCart);
+            if (Array.isArray(parsedCart) && JSON.stringify(cart) !== JSON.stringify(parsedCart)) {
+                cart = parsedCart;
+                updateCartDisplay();
+            }
+        }
+    } catch (error) {
+        // Silent fail for sync - don't spam console
+    }
+}
 
 // Load product details
 function loadProduct(productId) {
@@ -341,12 +417,12 @@ function loadProductImages() {
     const mainImagePlaceholder = document.getElementById('mainImagePlaceholder');
     mainImagePlaceholder.innerHTML = `<img src="${currentProduct.images[0]}" alt="${currentProduct.name}" 
                      style="
-                     width: 90%;       /* Set as per your design */
-                     height: 90%;      /* Adjust height as required */
-                     background: #fff;   /* Or any window background */
-                     border-radius: 16px; /* Rounded corners like in the product card */
-                     overflow: hidden;   /* Ensures image does not overflow corners */
-                     box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Optional, for card effect */
+                     width: 90%;       
+                     height: 90%;      
+                     background: #fff;   
+                     border-radius: 16px; 
+                     overflow: hidden;   
+                     box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
                      position: relative;
                      display: flex;
                      align-items: center;
@@ -378,11 +454,11 @@ function selectImage(index) {
     currentImageIndex = index;
     document.getElementById('mainImagePlaceholder').innerHTML = `<img src="${currentProduct.images[index]}" alt="${currentProduct.name}" 
                      style="
-                     width: 90%;       /* Set as per your design */
-                     height: 90%;      /* Adjust height as required */
-                     border-radius: 16px; /* Rounded corners like in the product card */
-                     overflow: hidden;   /* Ensures image does not overflow corners */
-                     box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Optional, for card effect */
+                     width: 90%;       
+                     height: 90%;      
+                     border-radius: 16px; 
+                     overflow: hidden;   
+                     box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
                      position: relative;
                      display: flex;
                      align-items: center;
@@ -396,31 +472,18 @@ function selectImage(index) {
     updateNavigationButtons();
 }
 
-// Navigate to previous image
-/*
-function previousImage() {
-    if (currentImageIndex > 0) {
-        selectImage(currentImageIndex - 1);
-    }
-}
-
-// Navigate to next image
-function nextImage() {
-    if (currentImageIndex < currentProduct.images.length - 1) {
-        selectImage(currentImageIndex + 1);
-    }
-}
-*/
 // Update navigation button visibility
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
-    prevBtn.style.opacity = currentImageIndex === 0 ? '0.5' : '1';
-    nextBtn.style.opacity = currentImageIndex === currentProduct.images.length - 1 ? '0.5' : '1';
-    
-    prevBtn.style.pointerEvents = currentImageIndex === 0 ? 'none' : 'auto';
-    nextBtn.style.pointerEvents = currentImageIndex === currentProduct.images.length - 1 ? 'none' : 'auto';
+    if (prevBtn && nextBtn) {
+        prevBtn.style.opacity = currentImageIndex === 0 ? '0.5' : '1';
+        nextBtn.style.opacity = currentImageIndex === currentProduct.images.length - 1 ? '0.5' : '1';
+        
+        prevBtn.style.pointerEvents = currentImageIndex === 0 ? 'none' : 'auto';
+        nextBtn.style.pointerEvents = currentImageIndex === currentProduct.images.length - 1 ? 'none' : 'auto';
+    }
 }
 
 // Quantity management
@@ -462,7 +525,7 @@ document.getElementById('quantityInput').addEventListener('input', function() {
     updateTotalPrice();
 });
 
-// Add to cart functionality
+// FIXED: Add to cart functionality with immediate sync
 function addToCart() {
     const quantity = parseInt(document.getElementById('quantityInput').value);
     
@@ -480,9 +543,8 @@ function addToCart() {
         });
     }
     
-    // Save to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
+    // Save and sync immediately
+    saveCart();
     updateCartDisplay();
     showToast(`Added ${quantity} ${quantity === 1 ? 'pack' : 'packs'} of ${currentProduct.name} to cart!`);
 }
@@ -523,26 +585,28 @@ function loadRelatedProducts(currentProductId) {
     }
     
     const relatedGrid = document.getElementById('relatedProductsGrid');
-    relatedGrid.innerHTML = '';
-    
-    relatedProducts.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.className = 'related-product-card';
-        productCard.onclick = () => {
-            window.location.href = `product-details.html?id=${product.id}`;
-        };
+    if (relatedGrid) {
+        relatedGrid.innerHTML = '';
         
-        productCard.innerHTML = `
-            <div class="related-product-image">${product.images[0]}</div>
-            <div class="related-product-name">${product.name}</div>
-            <div class="related-product-price">₹${product.price}</div>
-        `;
-        
-        relatedGrid.appendChild(productCard);
-    });
+        relatedProducts.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'related-product-card';
+            productCard.onclick = () => {
+                window.location.href = `product-details.html?id=${product.id}`;
+            };
+            
+            productCard.innerHTML = `
+                <div class="related-product-image">${product.images[0]}</div>
+                <div class="related-product-name">${product.name}</div>
+                <div class="related-product-price">₹${product.price}</div>
+            `;
+            
+            relatedGrid.appendChild(productCard);
+        });
+    }
 }
 
-// Cart management
+// FIXED: Cart management with better sync
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
@@ -550,42 +614,49 @@ function updateCartDisplay() {
     
     // Update cart count
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCount.textContent = totalItems;
+    if (cartCount) {
+        cartCount.textContent = totalItems;
+        cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
     
     // Update cart items
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="empty-cart">
-                <h3>Your cart is empty</h3>
-                <p>Add some products to get started!</p>
-            </div>
-        `;
-    } else {
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-image">${item.image}</div>
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">₹${item.price} each</div>
-                    <div class="cart-item-actions">
-                        <div class="cart-quantity-controls">
-                            <button class="cart-quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
-                            <span class="cart-item-quantity">${item.quantity}</span>
-                            <button class="cart-quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
+    if (cartItems) {
+        if (cart.length === 0) {
+            cartItems.innerHTML = `
+                <div class="empty-cart">
+                    <h3>Your cart is empty</h3>
+                    <p>Add some products to get started!</p>
+                </div>
+            `;
+        } else {
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">${item.image}</div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">₹${item.price} each</div>
+                        <div class="cart-item-actions">
+                            <div class="cart-quantity-controls">
+                                <button class="cart-quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
+                                <span class="cart-item-quantity">${item.quantity}</span>
+                                <button class="cart-quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
                         </div>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
     
     // Update total
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    totalAmount.textContent = total;
+    if (totalAmount) {
+        totalAmount.textContent = total;
+    }
 }
 
-// Update cart item quantity
+// FIXED: Update cart item quantity with immediate sync
 function updateCartQuantity(productId, change) {
     const item = cart.find(item => item.id === productId);
     if (item) {
@@ -593,16 +664,16 @@ function updateCartQuantity(productId, change) {
         if (item.quantity <= 0) {
             removeFromCart(productId);
         } else {
-            localStorage.setItem('cart', JSON.stringify(cart));
+            saveCart();
             updateCartDisplay();
         }
     }
 }
 
-// Remove item from cart
+// FIXED: Remove item from cart with immediate sync
 function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
-    localStorage.setItem('cart', JSON.stringify(cart));
+    saveCart();
     updateCartDisplay();
     showToast('Item removed from cart');
 }
@@ -610,16 +681,17 @@ function removeFromCart(productId) {
 // Toggle cart sidebar
 function toggleCart() {
     const cartSidebar = document.getElementById('cartSidebar');
-    cartSidebar.classList.toggle('open');
-    
-    if (cartSidebar.classList.contains('open')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
+    if (cartSidebar) {
+        cartSidebar.classList.toggle('open');
+        
+        if (cartSidebar.classList.contains('open')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     }
 }
 
-// Send WhatsApp order from cart
 // Send WhatsApp order from cart (mobile-compatible)
 function sendWhatsAppOrder() {
     if (cart.length === 0) {
@@ -661,51 +733,54 @@ function sendWhatsAppOrder() {
     document.body.removeChild(a);
 }
 
-
 // Search functionality
 function toggleSearch() {
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('searchInput');
     
-    searchContainer.classList.toggle('active');
-    if (searchContainer.classList.contains('active')) {
-        searchInput.focus();
+    if (searchContainer) {
+        searchContainer.classList.toggle('active');
+        if (searchContainer.classList.contains('active') && searchInput) {
+            searchInput.focus();
+        }
     }
 }
 
 // Search products
-document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    if (searchTerm.length > 2) {
-        // Implement search functionality
-        const matchedProducts = products.filter(product => 
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm) ||
-            product.category.toLowerCase().includes(searchTerm)
-        );
-        
-        // You can display search results here
-        console.log('Search results:', matchedProducts);
-    }
-});
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        if (searchTerm.length > 2) {
+            const matchedProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            console.log('Search results:', matchedProducts);
+        }
+    });
+}
 
 // Go back function
 function goBack() {
     if (window.history.length > 1) {
         window.history.back();
     } else {
-        window.location.href = 'index.html'; // Fallback to main page
+        window.location.href = 'index.html';
     }
 }
 
 // Show toast notification
 function showToast(message) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    if (toast) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
 }
 
 // Image zoom functionality
@@ -713,31 +788,37 @@ function openZoom() {
     const zoomModal = document.getElementById('zoomModal');
     const zoomImage = document.getElementById('zoomImage');
 
-    zoomImage.src = currentProduct.images[currentImageIndex];
-    zoomImage.alt = currentProduct.name;
-    zoomImage.style.fontSize = '10rem';
-    zoomImage.style.display = 'flex';
-    zoomImage.style.height ='450px';
-    zoomImage.style.alignItems = 'center';
-    zoomImage.style.justifyContent = 'center';
-    zoomImage.onerror = function () {
-        this.style.display = 'none';
-        this.insertAdjacentHTML('afterend', `<div style="font-size: 10rem;">${currentProduct.images[currentImageIndex]}</div>`);
-    };
+    if (zoomModal && zoomImage) {
+        zoomImage.src = currentProduct.images[currentImageIndex];
+        zoomImage.alt = currentProduct.name;
+        zoomImage.style.fontSize = '10rem';
+        zoomImage.style.display = 'flex';
+        zoomImage.style.height ='450px';
+        zoomImage.style.alignItems = 'center';
+        zoomImage.style.justifyContent = 'center';
+        zoomImage.onerror = function () {
+            this.style.display = 'none';
+            this.insertAdjacentHTML('afterend', `<div style="font-size: 10rem;">${currentProduct.images[currentImageIndex]}</div>`);
+        };
 
-    zoomModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+        zoomModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
-
 
 function closeZoom() {
     const zoomModal = document.getElementById('zoomModal');
-    zoomModal.classList.remove('active');
-    document.body.style.overflow = '';
+    if (zoomModal) {
+        zoomModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 // Add click handler to main image for zoom
-document.getElementById('mainImage').addEventListener('click', openZoom);
+const mainImage = document.getElementById('mainImage');
+if (mainImage) {
+    mainImage.addEventListener('click', openZoom);
+}
 
 // Utility function
 function capitalizeFirst(str) {
