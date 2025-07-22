@@ -620,33 +620,47 @@ function toggleCart() {
 }
 
 // Send WhatsApp order from cart
+// Send WhatsApp order from cart (mobile-compatible)
 function sendWhatsAppOrder() {
     if (cart.length === 0) {
         showToast('Your cart is empty! Please add some products first.');
         return;
     }
-    
+
     const phoneNumber = '919507002400';
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
+
     let message = `🛒 *New Order from PAU Website*\n\n`;
     message += `*Order Details:*\n`;
-    
+
     cart.forEach((item, index) => {
         message += `${index + 1}. ${item.name}\n`;
         message += `   Quantity: ${item.quantity} ${item.quantity === 1 ? 'pack' : 'packs'}\n`;
         message += `   Price: ₹${item.price} per pack\n`;
         message += `   Subtotal: ₹${item.price * item.quantity}\n\n`;
     });
-    
+
     message += `*Total Amount: ₹${total}*\n\n`;
     message += `Please confirm this order and provide delivery details.`;
-    
+
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
-    window.open(whatsappUrl, '_blank');
+    // Detect mobile devices and adjust WhatsApp URL accordingly
+    const isMobile = /iPhone|Android|iPad/i.test(navigator.userAgent);
+    const whatsappUrl = isMobile
+        ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
+        : `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // Create temporary anchor and simulate click (for better compatibility)
+    const a = document.createElement('a');
+    a.href = whatsappUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
+
 
 // Search functionality
 function toggleSearch() {
