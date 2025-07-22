@@ -42,7 +42,7 @@ body {
 .logo span {
     font-size: 0.75rem;
     opacity: 0.9;
-    display: none;
+    display: block;
 }
 
 .header-actions {
