@@ -10,7 +10,8 @@ const products = [
         images: ["./image/rose_floral.jpg"],
         rating: 4.8,
         reviews: 127,
-        discount: 45.55
+        discount: 45.55,
+        notify: false
     },
     {
         id: 2,
@@ -22,7 +23,8 @@ const products = [
         images: ["./image/bharat_darshan.jpg"],
         rating: 4.9,
         reviews: 203,
-        discount: 33.33
+        discount: 33.33,
+        notify: false
     },
     {
         id: 3,
@@ -34,7 +36,8 @@ const products = [
         images: ["./image/jasmine_agarbatti.jpg"],
         rating: 4.7,
         reviews: 89,
-        discount: 45.55
+        discount: 45.55,
+        notify: false
     },
     {
         id: 4,
@@ -46,7 +49,8 @@ const products = [
         images: ["🌿", "🍃", "🌱", "🌳"],
         rating: 4.6,
         reviews: 156,
-        discount: 20
+        discount: 20,
+        notify: true
     },
     {
         id: 5,
@@ -58,7 +62,8 @@ const products = [
         images: ["./image/chandan_herbal.jpg"],
         rating: 4.8,
         reviews: 145,
-        discount: 45.55
+        discount: 45.55,
+        notify: false
     },
     {
         id: 6,
@@ -70,7 +75,8 @@ const products = [
         images: ["🍋", "🍊", "🌿", "💨"],
         rating: 4.5,
         reviews: 92,
-        discount: 20
+        discount: 20,
+        notify: true
     },
     {
         id: 7,
@@ -82,7 +88,8 @@ const products = [
         images: ["🌺", "🌸", "💐", "🌼"],
         rating: 4.7,
         reviews: 78,
-        discount: 20
+        discount: 20,
+        notify: true
     },
     {
         id: 8,
@@ -94,7 +101,8 @@ const products = [
         images: ["🌱", "🌿", "🍃", "🌳"],
         rating: 4.6,
         reviews: 134,
-        discount: 20
+        discount: 20,
+        notify: true
     },
     {
         id: 9,
@@ -106,7 +114,8 @@ const products = [
         images: ["🍊", "🍋", "🌅", "💨"],
         rating: 4.5,
         reviews: 87,
-        discount: 19
+        discount: 19,
+        notify: true
     },
     {
         id: 10,
@@ -117,7 +126,8 @@ const products = [
         images: ["./image/2in1.jpg"],
         rating: 4.5,
         reviews: 50,
-        discount: 26.66
+        discount: 26.66,
+        notify: false
     }
 ];
 
@@ -220,13 +230,24 @@ function displayProducts(productsToShow = products) {
                         <div class="quantity-display" id="quantity-${product.id}">${quantities[product.id]}</div>
                         <button class="quantity-btn" onclick="increaseQuantity(${product.id})">+</button>
                     </div>
-                    <button class="add-to-cart" onclick="addToCart(${product.id})">Add</button>
+                    ${
+                        product.notify
+                        ? `<button class="notify-btn" onclick="notifyUser('${product.name}')">Notify Me</button>`
+                        : `<button class="add-to-cart" onclick="addToCart(${product.id})">Add</button>`
+                    }
                     
                 </div>
             </div>
         `;
         productGrid.appendChild(productCard);
     });
+}
+//notify the owner
+function notifyUser(productName) {
+    const message = `Hello! I'm interested in "${productName}". Please notify me when it's available.`;
+    const phoneNumber = "919507002400"; // your WhatsApp number, without '+' and with country code
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
 }
 
 // View Product Details

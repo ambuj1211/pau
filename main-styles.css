@@ -914,3 +914,46 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+/* 
+
+24/7/2025
+
+*/
+.notify-btn {
+    background: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex: 1;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.notify-btn:hover {
+    background: #e69500;
+}
+
+.notify-btn:active {
+    background: #cc8400;
+}
+
+/* Extra responsive adjustments */
+@media (max-width: 768px) {
+    .notify-btn {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .notify-btn {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+}

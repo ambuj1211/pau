@@ -548,20 +548,46 @@ body {
     color: #2b2b2b;
 }
 
+.related-products-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    margin: 0 -8px;
+    scroll-snap-type: x mandatory;
+}
+
 .related-products-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: inline-flex;
     gap: 16px;
+    padding: 8px;
 }
 
 .related-product-card {
+    flex: 0 0 calc(100% / 4 - 16px);
+    min-width: 200px;
+    max-width: 250px;
     background: #f8f9fa;
     border-radius: 8px;
     padding: 16px;
     text-align: center;
     cursor: pointer;
+    scroll-snap-align: start;
     transition: transform 0.2s;
 }
+
+@media (max-width: 1024px) {
+    .related-product-card {
+        flex: 0 0 calc(100% / 2.5); /* approx 2.5 cards on tablets */
+    }
+}
+
+@media (max-width: 600px) {
+    .related-product-card {
+        flex: 0 0 calc(100% / 1.5); /* show 1–2 cards on mobile */
+    }
+}
+
 
 .related-product-card:hover {
     transform: translateY(-4px);
@@ -927,5 +953,47 @@ body {
     .add-to-cart-btn, .whatsapp-btn {
         font-size: 1rem;
         padding: 14px 20px;
+    }
+}
+
+/* 
+
+24/7/2025
+
+*/
+.notify-btn {
+    background: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex: 1;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.notify-btn:hover {
+    background: #e69500;
+}
+
+.notify-btn:active {
+    background: #cc8400;
+}
+
+/* Extra responsive adjustments */
+@media (max-width: 768px) {
+    .notify-btn {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .notify-btn {
+        font-size: 0.8rem;
+        padding: 8px;
     }
 }

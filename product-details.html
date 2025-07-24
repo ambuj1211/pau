@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details - PAU | Prakash Agarbatti Udyog</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -43,8 +45,8 @@
                 <div class="main-image" id="mainImage">
                     <div class="image-placeholder" id="mainImagePlaceholder"></div>
                     <!-- <div class="image-navigation"> -->
-                        <!-- <button class="nav-btn prev-btn" onclick="previousImage()" id="prevBtn">‹</button> -->
-                        <!-- <button class="nav-btn next-btn" onclick="nextImage()" id="nextBtn">›</button> -->
+                    <!-- <button class="nav-btn prev-btn" onclick="previousImage()" id="prevBtn">‹</button> -->
+                    <!-- <button class="nav-btn next-btn" onclick="nextImage()" id="nextBtn">›</button> -->
                     <!-- </div> -->
                     <div class="image-counter" id="imageCounter">1 / 4</div>
                 </div>
@@ -61,11 +63,12 @@
         <!-- Product Information -->
         <div class="product-info-section">
             <div class="breadcrumb">
-                <span>Home</span> › <span id="productCategory">Floral</span> › <span id="productName">Rose Agarbatti</span>
+                <span>Home</span> › <span id="productCategory">Floral</span> › <span id="productName">Rose
+                    Agarbatti</span>
             </div>
 
             <h1 class="product-title" id="productTitle">Rose Agarbatti</h1>
-            
+
             <div class="product-rating">
                 <div class="stars">★★★★★</div>
                 <span class="rating-text">(4.8/5 - 127 reviews)</span>
@@ -80,9 +83,9 @@
             <div class="product-description">
                 <h3>Product Description</h3>
                 <p id="productDescription">
-                    Premium rose fragrance incense sticks made from natural ingredients. 
-                    Each pack contains 100 high-quality sticks that burn evenly and provide 
-                    long-lasting fragrance. Perfect for daily prayers, meditation, and creating 
+                    Premium rose fragrance incense sticks made from natural ingredients.
+                    Each pack contains 100 high-quality sticks that burn evenly and provide
+                    long-lasting fragrance. Perfect for daily prayers, meditation, and creating
                     a peaceful ambiance in your home or office.
                 </p>
             </div>
@@ -148,13 +151,8 @@
                     <span>Total: ₹<span id="totalPrice">150</span></span>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="add-to-cart-btn" onclick="addToCart()">
-                        🛒 Add to Cart
-                    </button>
-                    <button class="whatsapp-btn" onclick="orderViaWhatsApp()">
-                        📱 Order via WhatsApp
-                    </button>
+                <div class="action-buttons" id="actionButtons">
+                    <!-- JS will insert Add/Notify buttons dynamically -->
                 </div>
             </div>
         </div>
@@ -163,8 +161,10 @@
     <!-- Related Products Section -->
     <div class="related-products-section">
         <h2>Related Products</h2>
-        <div class="related-products-grid" id="relatedProductsGrid">
-            <!-- Related products will be populated by JavaScript -->
+        <div class="related-products-wrapper">
+            <div class="related-products-grid" id="relatedProductsGrid">
+                <!-- JS inserts items here -->
+            </div>
         </div>
     </div>
 
@@ -200,4 +200,5 @@
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

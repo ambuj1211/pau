@@ -9,7 +9,8 @@ const products = [
         images: ["./image/rose_floral.jpg"],
         rating: 4.8,
         reviews: 127,
-        discount:45.55,
+        discount: 45.55,
+        notify: false,
         specifications: {
             quantity: "100 sticks per pack",
             burnTime: "45-60 minutes per stick",
@@ -37,6 +38,7 @@ const products = [
         rating: 4.9,
         reviews: 203,
         discount: 33.33,
+        notify: false,
         specifications: {
             quantity: "90 sticks per pack",
             burnTime: "60 minutes per stick",
@@ -64,6 +66,7 @@ const products = [
         rating: 4.7,
         reviews: 89,
         discount: 45.55,
+        notify: false,
         specifications: {
             quantity: "100 sticks per pack",
             burnTime: "50-55 minutes per stick",
@@ -91,6 +94,7 @@ const products = [
         rating: 4.6,
         reviews: 156,
         discount: 20,
+        notify: true,
         specifications: {
             quantity: "80 sticks per pack",
             burnTime: "40-50 minutes per stick",
@@ -118,6 +122,7 @@ const products = [
         rating: 4.8,
         reviews: 145,
         discount: 45.55,
+        notify: false,
         specifications: {
             quantity: "90 sticks per pack",
             burnTime: "60 minutes per stick",
@@ -145,6 +150,7 @@ const products = [
         rating: 4.5,
         reviews: 92,
         discount: 20,
+        notify: true,
         specifications: {
             quantity: "100 sticks per pack",
             burnTime: "45 minutes per stick",
@@ -172,6 +178,7 @@ const products = [
         rating: 4.7,
         reviews: 78,
         discount: 20,
+        notify: true,
         specifications: {
             quantity: "100 sticks per pack",
             burnTime: "50 minutes per stick",
@@ -199,6 +206,7 @@ const products = [
         rating: 4.6,
         reviews: 134,
         discount: 20,
+        notify: true,
         specifications: {
             quantity: "90 sticks per pack",
             burnTime: "50 minutes per stick",
@@ -226,6 +234,7 @@ const products = [
         rating: 4.5,
         reviews: 87,
         discount: 19,
+        notify: true,
         specifications: {
             quantity: "90 sticks per pack",
             burnTime: "45 minutes per stick",
@@ -253,6 +262,7 @@ const products = [
         rating: 4.5,
         reviews: 50,
         discount: 26.66,
+        notify: false,
         specifications: {
             quantity: "40 sticks (2x20) per pack",
             burnTime: "40 minutes per stick",
@@ -296,7 +306,7 @@ function initializeCart() {
         cart = [];
         localStorage.removeItem('cart'); // Clear corrupted data
     }
-    
+
     // Immediate cart display update
     updateCartDisplay();
 }
@@ -312,17 +322,17 @@ function saveCart() {
 }
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize cart FIRST
     initializeCart();
-    
+
     // Get product ID from URL parameters or default to first product
     const urlParams = new URLSearchParams(window.location.search);
     const productId = parseInt(urlParams.get('id')) || 1;
-    
+
     loadProduct(productId);
     loadRelatedProducts(productId);
-    
+
     // Setup event listeners for cart sync
     setupCartSyncListeners();
 });
@@ -330,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // FIXED: Add cart synchronization listeners
 function setupCartSyncListeners() {
     // Listen for localStorage changes from other pages
-    window.addEventListener('storage', function(e) {
+    window.addEventListener('storage', function (e) {
         if (e.key === 'cart') {
             try {
                 const newCart = e.newValue ? JSON.parse(e.newValue) : [];
@@ -343,7 +353,7 @@ function setupCartSyncListeners() {
             }
         }
     });
-    
+
     // Periodic cart sync (fallback for same-origin issues)
     setInterval(syncCartFromStorage, 1000);
 }
@@ -367,29 +377,55 @@ function syncCartFromStorage() {
 // Load product details
 function loadProduct(productId) {
     currentProduct = products.find(p => p.id === productId);
-    
+
     if (!currentProduct) {
         currentProduct = products[0]; // Fallback to first product
     }
-    
+
     // Update page title
     document.title = `${currentProduct.name} - PAU | Prakash Agarbatti Udyog`;
-    
+
     // Update breadcrumb
     document.getElementById('productCategory').textContent = capitalizeFirst(currentProduct.category);
     document.getElementById('productName').textContent = currentProduct.name;
-    
+
     // Update product information
     document.getElementById('productTitle').textContent = currentProduct.name;
     document.getElementById('currentPrice').textContent = currentProduct.price;
     document.getElementById('originalPrice').textContent = currentProduct.originalPrice;
     document.getElementById('productDescription').textContent = currentProduct.description;
-    
+
+    const actionButtons = document.getElementById('actionButtons');
+
+    if (currentProduct.notify) {
+        // Show only "Notify Me" button
+        actionButtons.innerHTML = `
+        <button class="notify-btn" onclick="notifyUser('${currentProduct.name}')">
+            📢 Notify Me
+        </button>
+    `;
+
+        // Hide quantity section and price total if product is not available
+        document.querySelector('.quantity-section').style.display = 'none';
+        document.querySelector('.total-price').style.display = 'none';
+    } else {
+        // Show Add to Cart and WhatsApp buttons
+        actionButtons.innerHTML = `
+        <button class="add-to-cart-btn" onclick="addToCart()">🛒 Add to Cart</button>
+        <button class="whatsapp-btn" onclick="orderViaWhatsApp()">📱 Order via WhatsApp</button>
+    `;
+
+        // Show quantity and price section
+        document.querySelector('.quantity-section').style.display = '';
+        document.querySelector('.total-price').style.display = '';
+    }
+
+
     // Update rating
     const stars = '★'.repeat(Math.floor(currentProduct.rating)) + '☆'.repeat(5 - Math.floor(currentProduct.rating));
     document.querySelector('.stars').textContent = stars;
     document.querySelector('.rating-text').textContent = `(${currentProduct.rating}/5 - ${currentProduct.reviews} reviews)`;
-    
+
     // Update specifications
     document.getElementById('specQuantity').textContent = currentProduct.specifications.quantity;
     document.getElementById('specBurnTime').textContent = currentProduct.specifications.burnTime;
@@ -397,22 +433,31 @@ function loadProduct(productId) {
     document.getElementById('specLength').textContent = currentProduct.specifications.length;
     document.getElementById('specMaterial').textContent = currentProduct.specifications.material;
     document.getElementById('specCategory').textContent = currentProduct.specifications.category;
-    
+
     // Update features
     const featuresHtml = currentProduct.features.map(feature => `<li>${feature}</li>`).join('');
     document.getElementById('productFeatures').innerHTML = featuresHtml;
-    
+
     // Load images
     loadProductImages();
-    
+
     // Update price calculation
     updateTotalPrice();
 }
 
+//notify user
+function notifyUser(productName) {
+    const message = `Hello! I'm interested in "${productName}". Please notify me when it's available.`;
+    const phoneNumber = "919507002400"; // your WhatsApp number
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+}
+
+
 // Load product images
 function loadProductImages() {
     currentImageIndex = 0;
-    
+
     // Update main image
     const mainImagePlaceholder = document.getElementById('mainImagePlaceholder');
     mainImagePlaceholder.innerHTML = `<img src="${currentProduct.images[0]}" alt="${currentProduct.name}" 
@@ -429,14 +474,14 @@ function loadProductImages() {
                      justify-content: center;
                      "
                     onerror="this.style.display='none';this.parentNode.innerHTML='${currentProduct.images[0]}';">`
-    
+
     // Update image counter
     document.getElementById('imageCounter').textContent = `1 / ${currentProduct.images.length}`;
-    
+
     // Create thumbnails
     const thumbnailScroll = document.getElementById('thumbnailScroll');
     thumbnailScroll.innerHTML = '';
-    
+
     currentProduct.images.forEach((image, index) => {
         const thumbnail = document.createElement('div');
         thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
@@ -444,7 +489,7 @@ function loadProductImages() {
         thumbnail.onclick = () => selectImage(index);
         thumbnailScroll.appendChild(thumbnail);
     });
-    
+
     // Show/hide navigation buttons
     updateNavigationButtons();
 }
@@ -476,11 +521,11 @@ function selectImage(index) {
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    
+
     if (prevBtn && nextBtn) {
         prevBtn.style.opacity = currentImageIndex === 0 ? '0.5' : '1';
         nextBtn.style.opacity = currentImageIndex === currentProduct.images.length - 1 ? '0.5' : '1';
-        
+
         prevBtn.style.pointerEvents = currentImageIndex === 0 ? 'none' : 'auto';
         nextBtn.style.pointerEvents = currentImageIndex === currentProduct.images.length - 1 ? 'none' : 'auto';
     }
@@ -518,7 +563,7 @@ function updateTotalPrice() {
 }
 
 // Quantity input change handler
-document.getElementById('quantityInput').addEventListener('input', function() {
+document.getElementById('quantityInput').addEventListener('input', function () {
     const value = parseInt(this.value);
     if (value < 1) this.value = 1;
     if (value > 100) this.value = 100;
@@ -528,9 +573,9 @@ document.getElementById('quantityInput').addEventListener('input', function() {
 // FIXED: Add to cart functionality with immediate sync
 function addToCart() {
     const quantity = parseInt(document.getElementById('quantityInput').value);
-    
+
     const existingItem = cart.find(item => item.id === currentProduct.id);
-    
+
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
@@ -542,19 +587,21 @@ function addToCart() {
             quantity: quantity
         });
     }
-    
+
     // Save and sync immediately
     saveCart();
     updateCartDisplay();
     showToast(`Added ${quantity} ${quantity === 1 ? 'pack' : 'packs'} of ${currentProduct.name} to cart!`);
 }
 
+
+
 // Order via WhatsApp
 function orderViaWhatsApp() {
     const quantity = parseInt(document.getElementById('quantityInput').value);
     const total = currentProduct.price * quantity;
     const phoneNumber = '919507002400';
-    
+
     let message = `🛒 *Product Inquiry from PAU Website*\n\n`;
     message += `*Product Details:*\n`;
     message += `Product: ${currentProduct.name}\n`;
@@ -563,62 +610,71 @@ function orderViaWhatsApp() {
     message += `Total Amount: ₹${total}\n\n`;
     message += `*Product Description:*\n${currentProduct.description}\n\n`;
     message += `Please confirm availability and provide delivery details.`;
-    
+
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
+
     window.open(whatsappUrl, '_blank');
 }
 
 // Load related products
 function loadRelatedProducts(currentProductId) {
-    const relatedProducts = products
-        .filter(p => p.id !== currentProductId && p.category === currentProduct.category)
-        .slice(0, 4);
-    
-    // If not enough products in same category, add from other categories
-    if (relatedProducts.length < 4) {
-        const additionalProducts = products
-            .filter(p => p.id !== currentProductId && p.category !== currentProduct.category)
-            .slice(0, 4 - relatedProducts.length);
-        relatedProducts.push(...additionalProducts);
-    }
-    
-    const relatedGrid = document.getElementById('relatedProductsGrid');
-    if (relatedGrid) {
-        relatedGrid.innerHTML = '';
-        
-        relatedProducts.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'related-product-card';
-            productCard.onclick = () => {
-                window.location.href = `product-details.html?id=${product.id}`;
-            };
-            
-            productCard.innerHTML = `
-                <div class="related-product-image">${product.images[0]}</div>
-                <div class="related-product-name">${product.name}</div>
-                <div class="related-product-price">₹${product.price}</div>
+    const container = document.getElementById('relatedProductsGrid');
+    container.innerHTML = '';
+
+    // Filter out the current product
+    const otherProducts = products.filter(p => p.id !== currentProductId);
+
+    // Shuffle the array to get a random mix
+    const shuffled = otherProducts.sort(() => 0.5 - Math.random());
+
+    // Repeat enough products to make scroll feel endless
+    const repeatedProducts = [...shuffled, ...shuffled].slice(0, 20); // limit to 20 total for smooth scroll
+
+    repeatedProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'related-product-card';
+        productCard.onclick = () => {
+            window.location.href = `product-details.html?id=${product.id}`;
+        };
+
+        const image = product.images[0];
+        let mediaHTML = '';
+
+        if (image.startsWith('./')) {
+            mediaHTML = `
+                <img src="${image}" alt="${product.name}" class="related-product-image"
+                     onerror="this.onerror=null;this.style.display='none';this.parentNode.innerHTML='<div class=\'related-product-image\'>❓</div>';">
             `;
-            
-            relatedGrid.appendChild(productCard);
-        });
-    }
+        } else {
+            mediaHTML = `<div class="related-product-image">${image}</div>`;
+        }
+
+        productCard.innerHTML = `
+            ${mediaHTML}
+            <div class="related-product-name">${product.name}</div>
+            <div class="related-product-price">₹${product.price}</div>
+        `;
+
+        container.appendChild(productCard);
+    });
 }
+
+
 
 // FIXED: Cart management with better sync
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
     const totalAmount = document.getElementById('totalAmount');
-    
+
     // Update cart count
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     if (cartCount) {
         cartCount.textContent = totalItems;
         cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
     }
-    
+
     // Update cart items
     if (cartItems) {
         if (cart.length === 0) {
@@ -648,7 +704,7 @@ function updateCartDisplay() {
             `).join('');
         }
     }
-    
+
     // Update total
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     if (totalAmount) {
@@ -683,7 +739,7 @@ function toggleCart() {
     const cartSidebar = document.getElementById('cartSidebar');
     if (cartSidebar) {
         cartSidebar.classList.toggle('open');
-        
+
         if (cartSidebar.classList.contains('open')) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -716,7 +772,7 @@ function sendWhatsAppOrder() {
     message += `Please confirm this order and provide delivery details.`;
 
     const encodedMessage = encodeURIComponent(message);
-    
+
     // Detect mobile devices and adjust WhatsApp URL accordingly
     const isMobile = /iPhone|Android|iPad/i.test(navigator.userAgent);
     const whatsappUrl = isMobile
@@ -737,7 +793,7 @@ function sendWhatsAppOrder() {
 function toggleSearch() {
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('searchInput');
-    
+
     if (searchContainer) {
         searchContainer.classList.toggle('active');
         if (searchContainer.classList.contains('active') && searchInput) {
@@ -749,10 +805,10 @@ function toggleSearch() {
 // Search products
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
+    searchInput.addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase();
         if (searchTerm.length > 2) {
-            const matchedProducts = products.filter(product => 
+            const matchedProducts = products.filter(product =>
                 product.name.toLowerCase().includes(searchTerm) ||
                 product.description.toLowerCase().includes(searchTerm) ||
                 product.category.toLowerCase().includes(searchTerm)
@@ -793,7 +849,7 @@ function openZoom() {
         zoomImage.alt = currentProduct.name;
         zoomImage.style.fontSize = '10rem';
         zoomImage.style.display = 'flex';
-        zoomImage.style.height ='450px';
+        zoomImage.style.height = '450px';
         zoomImage.style.alignItems = 'center';
         zoomImage.style.justifyContent = 'center';
         zoomImage.onerror = function () {
@@ -826,7 +882,7 @@ function capitalizeFirst(str) {
 }
 
 // Keyboard navigation
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft') {
         previousImage();
     } else if (e.key === 'ArrowRight') {
@@ -843,11 +899,11 @@ document.addEventListener('keydown', function(e) {
 let touchStartX = 0;
 let touchEndX = 0;
 
-document.getElementById('mainImage').addEventListener('touchstart', function(e) {
+document.getElementById('mainImage').addEventListener('touchstart', function (e) {
     touchStartX = e.changedTouches[0].screenX;
 });
 
-document.getElementById('mainImage').addEventListener('touchend', function(e) {
+document.getElementById('mainImage').addEventListener('touchend', function (e) {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
 });
@@ -855,7 +911,7 @@ document.getElementById('mainImage').addEventListener('touchend', function(e) {
 function handleSwipe() {
     const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
-    
+
     if (Math.abs(diff) > swipeThreshold) {
         if (diff > 0) {
             // Swipe left - next image
@@ -868,13 +924,13 @@ function handleSwipe() {
 }
 
 // Close cart when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const cartSidebar = document.getElementById('cartSidebar');
     const cartIcon = document.querySelector('.cart-icon');
-    
-    if (window.innerWidth >= 768 && 
-        !cartSidebar.contains(event.target) && 
-        !cartIcon.contains(event.target) && 
+
+    if (window.innerWidth >= 768 &&
+        !cartSidebar.contains(event.target) &&
+        !cartIcon.contains(event.target) &&
         cartSidebar.classList.contains('open')) {
         toggleCart();
     }
