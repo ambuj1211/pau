@@ -4,37 +4,37 @@ const products = [
         id: 1,
         name: "Rose Agarbatti",
         description: "Premium rose fragrance incense sticks made from natural ingredients. Each pack contains 100 high-quality sticks that burn evenly and provide long-lasting fragrance.",
-        price: 150,
-        originalPrice: 200,
+        price: 99,
+        originalPrice: 180,
         category: "floral",
         images: ["./image/rose_floral.jpg"],
         rating: 4.8,
         reviews: 127,
-        discount: 25
+        discount: 45.55
     },
     {
         id: 2,
         name: "Bharat Darshan",
         description: "Pure sandalwood incense sticks crafted from authentic sandalwood powder and natural binding agents. Known for its calming properties and spiritual significance.",
-        price: 250,
-        originalPrice: 320,
+        price: 199,
+        originalPrice: 300,
         category: "spiritual",
         images: ["./image/bharat_darshan.jpg"],
         rating: 4.9,
         reviews: 203,
-        discount: 22
+        discount: 33.33
     },
     {
         id: 3,
         name: "Jasmine Agarbatti",
         description: "Natural jasmine fragrance incense sticks that capture the essence of fresh jasmine flowers. Perfect for creating a romantic and peaceful environment.",
-        price: 180,
-        originalPrice: 230,
+        price: 99,
+        originalPrice: 180,
         category: "floral",
         images: ["./image/jasmine_agarbatti.jpg"],
         rating: 4.7,
         reviews: 89,
-        discount: 22
+        discount: 45.55
     },
     {
         id: 4,
@@ -52,13 +52,13 @@ const products = [
         id: 5,
         name: "Chandan Agarbatti",
         description: "Traditional chandan fragrance incense sticks made from pure sandalwood powder. Perfect for daily prayers and meditation sessions.",
-        price: 300,
-        originalPrice: 380,
+        price: 99,
+        originalPrice: 180,
         category: "spiritual",
         images: ["./image/chandan_herbal.jpg"],
         rating: 4.8,
         reviews: 145,
-        discount: 21
+        discount: 45.55
     },
     {
         id: 6,
@@ -111,13 +111,13 @@ const products = [
     {
         id: 10,
         name: "2IN1",
-        price: 18,
-        originalPrice: 20,
+        price: 219,
+        originalPrice: 300,
         category: "others",
         images: ["./image/2in1.jpg"],
         rating: 4.5,
         reviews: 50,
-        discount: 10
+        discount: 26.66
     }
 ];
 
