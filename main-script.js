@@ -211,7 +211,12 @@ function displayProducts(productsToShow = products) {
                      "
                     onerror="this.style.display='none';this.parentNode.innerHTML='${product.images[0]}';">
 
-                ${product.discount ? `<div class="product-badge">${product.discount}% OFF</div>` : ''}
+                ${product.originalPrice > product.price
+                    ? `<div class="product-discount product-badge">
+                    ${(((product.originalPrice - product.price) / product.originalPrice) * 100).toFixed(2)}% OFF</div>`
+                    : ''
+                }
+
                 <div class="product-rating">
                     <span>★</span>
                     <span>${product.rating}</span>
@@ -230,11 +235,10 @@ function displayProducts(productsToShow = products) {
                         <div class="quantity-display" id="quantity-${product.id}">${quantities[product.id]}</div>
                         <button class="quantity-btn" onclick="increaseQuantity(${product.id})">+</button>
                     </div>
-                    ${
-                        product.notify
-                        ? `<button class="notify-btn" onclick="notifyUser('${product.name}')">Notify Me</button>`
-                        : `<button class="add-to-cart" onclick="addToCart(${product.id})">Add</button>`
-                    }
+                    ${product.notify
+                ? `<button class="notify-btn" onclick="notifyUser('${product.name}')">Notify Me</button>`
+                : `<button class="add-to-cart" onclick="addToCart(${product.id})">Add</button>`
+            }
                     
                 </div>
             </div>

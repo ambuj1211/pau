@@ -393,6 +393,16 @@ function loadProduct(productId) {
     document.getElementById('productTitle').textContent = currentProduct.name;
     document.getElementById('currentPrice').textContent = currentProduct.price;
     document.getElementById('originalPrice').textContent = currentProduct.originalPrice;
+    const discountBadge = document.querySelector('.discount-badge');
+    if (currentProduct.originalPrice > currentProduct.price) {
+        const discount = (((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100).toFixed(2);
+        discountBadge.textContent = `${discount}% OFF`;
+        discountBadge.style.display = 'inline-block';
+    } else {
+        discountBadge.style.display = 'none';
+    }
+
+
     document.getElementById('productDescription').textContent = currentProduct.description;
 
     const actionButtons = document.getElementById('actionButtons');
